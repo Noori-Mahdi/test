@@ -1,8 +1,6 @@
 'use client'
 
-import { TFakeEvent, TLoginStepTwoProps, TPreviousAccount } from '@/domain/type'
 import Button from '@/presentation/components/Button'
-import Input from '@/presentation/components/Input'
 import Modal from '@/presentation/components/Modal'
 import OTPInput from '@/presentation/components/OTP'
 import { useRef, useState } from 'react'
@@ -11,50 +9,52 @@ import { PiHeadsetDuotone } from 'react-icons/pi'
 import { twMerge } from 'tailwind-merge'
 import SelectPreviousAccount from '../../SelectPreviousAccount'
 
-import { fackAcount } from '../../../../../data/fackAcount'
 import { GrMap } from 'react-icons/gr'
 import { useLogin } from '@/presentation/contexts/LoginContext'
-import { maskMiddleOfPhone } from '@/domain/maskMiddleOfPhone'
+import { maskMiddleOfPhone } from '@/domain/function/maskMiddleOfPhone'
 import CountdownTimer from '../../Timer'
 import sendCode from '@/infrastructure/services/sendCode'
 import otpConfirm from '@/infrastructure/services/otpConfirm'
 import { getFieldErrors } from '@/presentation/utils/getFieldErrors'
 import { useAuth } from '@/presentation/contexts/AuthContext'
 import customerShopList from '@/infrastructure/services/customerShopList'
-import { setToken } from '@/infrastructure/services/tokenManager'
+import { setApiKey, setToken } from '@/infrastructure/services/tokenManager'
+import { TLoginStepTwoProps } from '@/domain/type/componentsPropsType'
+import { TFakeEvent, TPreviousAccount } from '@/domain/type/unit'
 
 const LoginStepTwo = ({ className }: TLoginStepTwoProps) => {
-  const [formValues, setFormValues] = useState<Record<string, string>>({
-    code: '',
-  })
-  const [showPreviousAccount, setShowPreviousAccount] = useState(false)
-  const [showTimer, setShowTimer] = useState(true)
-  const [accountList, setAccountList] = useState<TPreviousAccount[] | []>([])
+  const [showPreviousAccount, setShowPreviousAccount] = useState(false) //مدال مربوط به اکانت‌های قبلی
+  const [showTimer, setShowTimer] = useState(true) // نمایش تایمر
+  const [accountList, setAccountList] = useState<TPreviousAccount[] | []>([]) // لیست اکانت‌های قبلی کاربر
+  const [formValues, setFormValues] = useState<Record<string, string>>({})
   const [formErrors, setFormErrors] = useState<Record<string, string | null>>(
     {}
   )
+  //  هوک کاستوم لاگین دیتای موقت برای رفت برگشت در فرم (Reduser + Context)
   const { state: loginState, dispatch: loginDispatch } = useLogin()
-  const { dispatch: authDispatch } = useAuth()
-
+  //  هوک کاستوم اصلی کاربر در کل برنامه (Reduser + Context)
+  const { state: authState, dispatch: authDispatch } = useAuth()
+  // رف مربوط به ریست کردن تایمر
   const timerRef = useRef<{ reset: () => void }>(null)
-
+  // ماسک کردن شماره همراه کاربر برای نمایش
   const maskMobile = maskMiddleOfPhone(loginState.phone)
-
-  const handleResetCode = async () => {
-    try {
-      const result = await sendCode({ mobile: loginState.phone })
-      timerRef.current?.reset()
-      setShowTimer(true)
-    } catch (error: any) {
-      alert('مشکلی در دریافت کد به وجود آمده. دوباره تلاش کنید')
-      console.log(error)
-    }
-  }
 
   const handleChange = (e: TFakeEvent) => {
     const { name, value } = e.target
     setFormValues((prev) => ({ ...prev, [name]: value }))
     setFormErrors((prev) => ({ ...prev, [name]: null }))
+  }
+
+  // دریافت مجدد کد با همین شماره، شماره ذخیره شد در کانتکس لاگین
+  const handleResetCode = async () => {
+    try {
+      await sendCode({ mobile: loginState.phone })
+      timerRef.current?.reset()
+      setShowTimer(true)
+    } catch (error: any) {
+      alert('درخواست شما به مشکل خورد. لطفا دوباره تلاش کنید.')
+      console.log(error)
+    }
   }
 
   const handleSubmiit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,20 +63,28 @@ const LoginStepTwo = ({ className }: TLoginStepTwoProps) => {
       const result = await otpConfirm({
         mobile: loginState.phone,
         code: formValues.code,
-        device_id: 'rfwer',
-        role_group: 'customer',
+        device_id: 'rfwer', // این مقادیر در مرورگر مستقیم قابل دسترس نیست
+        role_group: 'customer', // این مقادیر در مرورگر مستقیم قابل دسترس نیست
       })
       if (result.data.object.token) {
-        authDispatch({ type: 'setToken', payload: result.data.object.token })
-        setToken(result.data.object.token)
-        const customerListShopResult = await customerShopList()
+        authDispatch({ type: 'login', payload: result.data.object }) // توکن و کاربر را به کانتکس اصلی اضافه میکنیم
+        setToken(result.data.object.token) // ماژل برای ذخیره سازی و استفاده موقع اضافه کردن در هدر
+        setApiKey(result.data.object.apiKey)
+        const customerListShopResult = await customerShopList() // درخواست دریافت باقی اکانت ها
+
+        // console.log(customerListShopResult, 'customerListShopResult111')
+        //  customerShopList دیتای نامربوط بر می‌گرداند
+
         if (customerListShopResult?.data?.object?.data?.length > 0) {
+          // باز شدن پنجره مربوط انتخاب اکانت‌های دیگر
           setAccountList(customerListShopResult?.data?.object?.data)
           setShowPreviousAccount(true)
         } else {
+          // انتقال به فرم بعد به عنوان کاربر جدید
           loginDispatch({ type: 'setStep', payload: 3 })
           setAccountList([])
         }
+        // در صورت دریافت توکن به کانتکس اعلام می‌شود
         loginDispatch({ type: 'setCode', payload: true })
       } else {
         alert('توکن دریافت نشد')
@@ -101,16 +109,11 @@ const LoginStepTwo = ({ className }: TLoginStepTwoProps) => {
         className
       )}
     >
-      <div className="text-center text-base font-medium text-neutral-600">
-        <div className="font-bold text-3xl pb-2 text-black">
-          احراز هویت با کد تایید پیامکی
-        </div>
-        <div>کد تایید 5 رقمی به شماره شما ارسال شد. لطفا آن را وارد کنید.</div>
-      </div>
       <div className="flex justify-start items-end w-full">
         <BiEditAlt
           className="text-green-500 text-2xl cursor-pointer"
           onClick={() => {
+            // انتقال به فرم اول برای ویرایش
             loginDispatch({ type: 'setStep', payload: 1 })
           }}
         />
@@ -131,6 +134,7 @@ const LoginStepTwo = ({ className }: TLoginStepTwoProps) => {
           seconds={300}
           expiredMessage={'زمان ارسال پیامک به اتمام رسیده است.'}
           ref={timerRef}
+          //  با تمام شدن زمان تایمر بسته بشه
           onEnd={() => {
             setShowTimer(false)
           }}
@@ -147,7 +151,7 @@ const LoginStepTwo = ({ className }: TLoginStepTwoProps) => {
         <Button
           type="submit"
           label="ورود"
-          disabled={!(formValues.code.length == 5)}
+          disabled={formValues.code?.includes('-')}
         />
       </form>
       <Button
@@ -156,7 +160,7 @@ const LoginStepTwo = ({ className }: TLoginStepTwoProps) => {
         color="transparent"
         size="small"
         rounded="normal"
-        className="text-2xl p-4"
+        className="text-2xl p-4 hidden sm:flex"
       />
 
       <Modal

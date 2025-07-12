@@ -4,26 +4,9 @@ import { useEffect, useRef, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { IoIosArrowDown } from 'react-icons/io'
-import { TFakeEventNumber } from '@/domain/type'
+import { TDropDownProps } from '@/domain/type/componentsPropsType'
 
-export type TOption = {
-  id: number
-  title: string
-}
 
-type TDropDownProps = {
-  name: string
-  label?: string
-  options: TOption[]
-  defaultValue?: number
-  required?: boolean
-  error?: string
-  readOnly?: boolean
-  className?: string
-  classNameIcon?: string
-  icon?: React.ReactNode
-  onChange?: (e: TFakeEventNumber) => void
-}
 
 const DropDown = ({
   name,

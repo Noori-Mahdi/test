@@ -1,6 +1,6 @@
 'use client'
 
-import { TOTPInputProps } from '@/domain/type'
+import { TOTPInputProps } from '@/domain/type/componentsPropsType'
 import { useRef, useState } from 'react'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { twMerge } from 'tailwind-merge'

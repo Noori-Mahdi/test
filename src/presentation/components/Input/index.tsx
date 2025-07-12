@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { twMerge } from 'tailwind-merge'
-import { TInputProps } from '@/domain/type'
 import { RiErrorWarningLine } from 'react-icons/ri'
+import { TInputProps } from '@/domain/type/componentsPropsType'
 
 const Input = ({
   type,
@@ -16,7 +16,7 @@ const Input = ({
   secondaryIcon,
   error,
   readOnly,
-  hiddenBorder =false,
+  hiddenBorder = false,
   className,
   classNameIcon,
   classNameSecondaryIcon,
@@ -52,7 +52,7 @@ const Input = ({
           setFocus(true)
         }}
         className={twMerge(
-          'relative flex items-center text-base font-medium border rounded-xl w-full bg-white',
+          'relative flex items-center text-base font-medium border rounded-xl w-full bg-white cursor-text',
           error ? 'border-red-400' : 'border-neutral-400',
           hiddenBorder && 'border-transparent rounded-full'
         )}
@@ -64,7 +64,7 @@ const Input = ({
           {label && (
             <label
               className={twMerge(
-                'absolute select-none capitalize tracking-wide font-medium text-neutral-500  text-sm flex items-center justify-between w-fit px-1 transition-all duration-400',
+                'absolute select-none capitalize tracking-wide font-medium text-neutral-500  text-sm flex items-center justify-between cursor-text w-fit px-1 transition-all duration-400',
                 error && 'text-red-400',
                 focus || value.length != 0
                   ? 'top-0 -translate-y-3 translate-x-6 bg-white'

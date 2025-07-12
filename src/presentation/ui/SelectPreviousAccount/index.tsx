@@ -1,5 +1,6 @@
 'use client'
-import { TPreviousAccount, TSelectPreviousAccountProps } from '@/domain/type'
+import { TSelectPreviousAccountProps } from '@/domain/type/componentsPropsType'
+import { TPreviousAccount } from '@/domain/type/unit'
 import customerShopList from '@/infrastructure/services/customerShopList'
 import Button from '@/presentation/components/Button'
 import Image from 'next/image'

@@ -1,3 +1,4 @@
+import { TMessageProps } from '@/domain/type/componentsPropsType'
 import { IoWarningOutline } from 'react-icons/io5'
 import {
   MdCheckCircleOutline,
@@ -6,10 +7,7 @@ import {
 } from 'react-icons/md'
 import { twMerge } from 'tailwind-merge'
 
-export type TMessageProps = {
-  message: string
-  type: 'sucess' | 'warning' | 'info' | 'error'
-}
+
 
 const Message = ({ message, type }: TMessageProps) => {
   return (

@@ -1,18 +1,6 @@
-// unit
+import { TBtnGroup, TDropDownOption, TFakeEvent, TFakeEventFile, TFakeEventNumber, TPreviousAccount } from "./unit"
 
-export type TValidationResult = {
-  type: boolean
-  message: string | null
-}
 
-export type TValidationResults = Record<string, TValidationResult>
-
-//  function
-export type TInputValidation =
-  | ((value: string, type: string) => TValidationResult)
-  | ((formValues: Record<string, string>) => TValidationResults)
-
-//  Props
 export type TContainerProps = {
   children: React.ReactNode
   className?: string
@@ -29,6 +17,68 @@ export type TLogoProps = {
   classNameContext?: string
 }
 
+export type TBtnGroupProps = {
+  btnList: TBtnGroup[]
+}
+
+export type TCountdownTimerProps = {
+  seconds: number
+  onEnd?: () => void
+  expiredMessage?: string
+  className?: string
+}
+
+
+export type TDynamicInputListPorps = {
+  name: string
+  label: string
+  defaultValue: string
+  inputIcon?: React.ReactNode
+  classNameIcon?: string
+  classNameSecondaryIcon?: string
+}
+
+export type TImageUploaderProps = {
+  name: string
+  defaultValue?: File
+  onChange?: (e: TFakeEventFile) => void
+}
+
+export type TMessageProps = {
+  message: string
+  type: 'sucess' | 'warning' | 'info' | 'error'
+}
+
+export type THeaderFormProps = {
+  title: string
+  subTitle: string
+  className?: string
+}
+
+export type TMapProps = {
+  onClose?: () => void
+  onClick?: (e: { lat: number; lng: number }) => void
+  onClickBtn?: () => void
+  defaultValue?: { lat: number; lng: number }
+  isLock?: boolean
+  blurDisable?: boolean
+  className?: string
+}
+
+export type TDropDownProps = {
+  name: string
+  label?: string
+  options: TDropDownOption[]
+  defaultValue?: number
+  required?: boolean
+  error?: string
+  readOnly?: boolean
+  className?: string
+  classNameIcon?: string
+  icon?: React.ReactNode
+  onChange?: (e: TFakeEventNumber) => void
+}
+
 export type TInputProps = {
   type: 'text'
   name: string
@@ -40,18 +90,13 @@ export type TInputProps = {
   className?: string
   readOnly?: boolean
   inputIcon?: React.ReactNode
-  hiddenBorder?:boolean
+  hiddenBorder?: boolean
   classNameIcon?: string
   secondaryIcon?: React.ReactNode
   classNameSecondaryIcon?: string
   onClickSecondaryIcon?: () => void
   onChange?: (e: React.ChangeEvent<HTMLInputElement> | TFakeEvent) => void
 }
-
-export type TFakeEvent = { target: { name: string; value: string } }
-export type TFakeEventFile = { target: { name: string; value: File | '' }}
-export type TFakeEventNumber = { target: { name: string; value: number } }
-
 
 export type TButtomProps = {
   label?: string
@@ -92,13 +137,6 @@ export type TModalProps = {
   className?: string
   size?: string
   label?: string | React.ReactNode
-}
-
-export type TPreviousAccount = {
-  id: string
-  image: string
-  addrese1: string
-  addrese2: string
 }
 
 export type TSelectPreviousAccountProps = {

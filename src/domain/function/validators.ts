@@ -1,4 +1,4 @@
-import { TValidationResults } from "./type"
+import { TValidationResults } from '../type/unit'
 
 export const validateFormValues = (
   values: Record<string, string>

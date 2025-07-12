@@ -1,6 +1,6 @@
 'use client'
 
-import { TModalProps } from '@/domain/type'
+import { TModalProps } from '@/domain/type/componentsPropsType'
 import { useEffect, useState } from 'react'
 import { IoIosClose } from 'react-icons/io'
 import { IoWarningOutline } from 'react-icons/io5'

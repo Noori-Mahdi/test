@@ -1,10 +1,8 @@
 'use client'
-import {
-  TFakeEvent,
-  TLoginStepOneProps,
-  TValidationResult,
-} from '@/domain/type'
-import { validateFormValues } from '@/domain/validators'
+
+import { validateFormValues } from '@/domain/function/validators'
+import { TLoginStepOneProps } from '@/domain/type/componentsPropsType'
+import { TFakeEvent, TValidationResult } from '@/domain/type/unit'
 import sendCode from '@/infrastructure/services/sendCode'
 import Button from '@/presentation/components/Button'
 import Input from '@/presentation/components/Input'
@@ -16,9 +14,7 @@ import { PiHeadsetDuotone } from 'react-icons/pi'
 import { twMerge } from 'tailwind-merge'
 
 const LoginStepOne = ({ className }: TLoginStepOneProps) => {
-  const [formValues, setFormValues] = useState<Record<string, string>>({
-    mobile: '',
-  })
+  const [formValues, setFormValues] = useState<Record<string, string>>({})
   const [validations, setValidations] = useState<
     Record<string, TValidationResult>
   >({})
@@ -26,6 +22,7 @@ const LoginStepOne = ({ className }: TLoginStepOneProps) => {
     {}
   )
 
+  //  هوک کاستوم لاگین دیتای موقت برای رفت برگشت در فرم (Reduser + Context)
   const { state, dispatch } = useLogin()
 
   const handleChange = (
@@ -39,9 +36,10 @@ const LoginStepOne = ({ className }: TLoginStepOneProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    //  انجام اعتبارسنجی
     const validationResults = validateFormValues(formValues)
     setValidations(validationResults)
-
+    // اگه معتبر نباشن درخواست زده نمیشه
     const isFormValid = Object.values(validationResults).every((v) => v.type)
     if (!isFormValid) return
 
@@ -50,12 +48,12 @@ const LoginStepOne = ({ className }: TLoginStepOneProps) => {
       dispatch({ type: 'setPhone', payload: formValues.mobile })
       dispatch({ type: 'setStep', payload: 2 })
     } catch (error: any) {
-      const fields = Object.keys(formValues)
+      const fields = Object.keys(formValues) // دریافت اسم‌های ایمپوت ها
       if (error?.response?.data?.errors) {
-        const errors = getFieldErrors(error, fields)
-        setFormErrors(errors)
+        const errors = getFieldErrors(error, fields) // دریافت ارور براساس اینپوتی که ارور داده
+        setFormErrors(errors) // کدوم اینپوت ها ارور دارن
       } else if (error.message) {
-        alert(error.message)
+        alert(error.message) //زمانی که برای اتصال به سرور مشکلی پیش می‌آید
       } else {
         console.log(error)
       }
@@ -64,16 +62,10 @@ const LoginStepOne = ({ className }: TLoginStepOneProps) => {
   return (
     <div
       className={twMerge(
-        'flex justify-between sm:justify-center items-center flex-col gap-4 sm:gap-8',
+        'flex justify-end sm:justify-center items-center flex-col',
         className
       )}
     >
-      <div className="text-center text-base font-medium text-neutral-600">
-        <div className="font-bold text-3xl pb-2 text-black">
-          ورود به حساب کاربری
-        </div>
-        <div>لطفا موبایل خود را برای ورود به حساب وارد کنید.</div>
-      </div>
       <div className="w-full flex flex-col gap-3 items-center">
         <form onSubmit={handleSubmit} className="w-full">
           <Input
@@ -91,7 +83,11 @@ const LoginStepOne = ({ className }: TLoginStepOneProps) => {
             }
             onChange={handleChange}
           />
-          <Button type="submit" label="ورود" />
+          <Button
+            type="submit"
+            label="ورود"
+            disabled={formValues.mobile ? false : true}
+          />
         </form>
         <div>یا</div>
         <div className="text-base font-medium text-neutral-600">
@@ -107,7 +103,7 @@ const LoginStepOne = ({ className }: TLoginStepOneProps) => {
           color="transparent"
           size="small"
           rounded="normal"
-          className="text-2xl p-4"
+          className="text-2xl p-4 hidden sm:flex"
         />
       </div>
     </div>

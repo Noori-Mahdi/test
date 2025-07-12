@@ -1,4 +1,4 @@
-import { TLogoProps } from '@/domain/type'
+import { TLogoProps } from '@/domain/type/componentsPropsType'
 import Image from 'next/image'
 import { twMerge } from 'tailwind-merge'
 

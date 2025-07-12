@@ -1,4 +1,4 @@
-import { TContainerProps } from '@/domain/type'
+import { TContainerProps } from '@/domain/type/componentsPropsType'
 import { twMerge } from 'tailwind-merge'
 
 const Container = ({
@@ -10,7 +10,7 @@ const Container = ({
   return (
     <div
       className={twMerge(
-        'px-3 py-3 md:px-16  lg:px-24 ',
+        'px-5 py-10 md:px-20  lg:px-24 ',
         removeSpaceX && 'px-0',
         removeSpaceY && 'py-0',
         className

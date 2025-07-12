@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from './tokenManager'
+import { getApiKey, getToken } from './tokenManager'
 
 export const api = axios.create({
   baseURL: 'https://develop-test.visiton.ir/api/v1',
@@ -9,9 +9,11 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = getToken()
+  const apiKey = getApiKey()
   if (token) {
     config.headers = config.headers ?? {}
     config.headers.Authorization = `Bearer ${token}`
+    if(apiKey) config.headers.apiKey = `${apiKey}`
   }
   return config
 })

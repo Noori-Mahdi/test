@@ -9,23 +9,25 @@ type TLoginState = {
     shop_name?: string
     guild_id?: number
     location_type?: string
-    province_id?: string
-    township_id?: string
+    province_id?: number
+    township_id?: number
     address?: string
-    location_lat?: string
-    location_lng?: string
+    location_lat?: number
+    location_lng?: number
     user_full_name?: string
     user_mobile_1?: string
-    city_id?: string
-    area_id?: string
-    sector_id?: string
-    village_id?: string
-    road_side_id?: string
-    user_id?: string
+    city_id?: number
+    area_id?: number
+    sector_id?: number
+    village_id?: number
+    road_side_id?: number
+    user_id?: number
     shop_image?: File
   }
 }
 // 09114227969
+// 09159303097
+// 09154477277
 const initialState: TLoginState = {
   step: 1,
   phone: '',

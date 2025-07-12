@@ -5,19 +5,15 @@ import { useState, ChangeEvent, useEffect, useRef } from 'react'
 import { CiImageOn } from 'react-icons/ci'
 import { GoTrash } from 'react-icons/go'
 import Button from '../Button'
-import { TFakeEventFile } from '@/domain/type'
+import { TImageUploaderProps } from '@/domain/type/componentsPropsType'
 
-export type ImageUploaderProps = {
-  name: string
-  defaultValue?: File
-  onChange?: (e: TFakeEventFile) => void
-}
+
 
 export default function ImageUploader({
   name,
   defaultValue,
   onChange,
-}: ImageUploaderProps) {
+}: TImageUploaderProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [file, setFile] = useState<File | null>(defaultValue ?? null)
 

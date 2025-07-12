@@ -9,16 +9,9 @@ import { IoIosClose } from 'react-icons/io'
 import { TbChartTreemap } from 'react-icons/tb'
 import { FaLocationCrosshairs } from 'react-icons/fa6'
 import { twMerge } from 'tailwind-merge'
+import { TMapProps } from '@/domain/type/componentsPropsType'
 
-export type TMapProps = {
-  onClose?: () => void
-  onClick?: (e: { lat: number; lng: number }) => void
-  onClickBtn?: () => void
-  defaultValue?: { lat: number; lng: number }
-  isLock?: boolean
-  blurDisable?: boolean
-  className?: string
-}
+
 
 export default function Map({
   isLock = true,
@@ -51,7 +44,7 @@ export default function Map({
       boxZoom: !isLock,
       keyboard: !isLock,
       touchZoom: !isLock,
-    }).setView([35.6892, 51.389], 13)
+    }).setView([36.2605, 59.6168], 13)
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',

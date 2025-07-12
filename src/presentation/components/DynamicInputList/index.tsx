@@ -3,23 +3,10 @@ import { GoPlusCircle } from 'react-icons/go'
 import Input from '../Input'
 import { useState } from 'react'
 import { IoIosCloseCircleOutline } from 'react-icons/io'
-import { generateId } from '@/domain/uniqId'
+import { generateId } from '@/domain/function/uniqId'
+import { TDynamicInputListPorps } from '@/domain/type/componentsPropsType'
+import { TDynamicInput, TDynamicInputsInfo } from '@/domain/type/unit'
 
-export type TDynamicInputListPorps = {
-  name: string
-  label: string
-  defaultValue: string
-  inputIcon?: React.ReactNode
-  classNameIcon?: string
-  classNameSecondaryIcon?: string
-}
-
-export type TDynamicInput = {
-  id: string
-  value: string
-}
-
-export type TDynamicInputsInfo = TDynamicInput[]
 
 const DynamicInputList = ({
   name,
@@ -31,7 +18,6 @@ const DynamicInputList = ({
   const [inputsInfo, setInputsInfo] = useState<TDynamicInputsInfo>([])
 
   const handleAddInput = () => {
-    console.log('sssssssssss')
     const newInput: TDynamicInput = {
       id: generateId(),
       value: '',

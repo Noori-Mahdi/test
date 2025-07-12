@@ -1,19 +1,10 @@
 'use client'
 import React from 'react'
 import Button from '../Button'
+import { twMerge } from 'tailwind-merge'
+import { TBtnGroupProps } from '@/domain/type/componentsPropsType'
 
-export type BtnGroup = {
-  label: string
-  active: boolean
-  disable: boolean
-  onClick?: () => void
-}
-
-export type BtnGroupProps = {
-  btnList: BtnGroup[]
-}
-
-const BtnGroup = ({ btnList }: BtnGroupProps) => {
+const BtnGroup = ({ btnList }: TBtnGroupProps) => {
   return (
     <div className="flex justify-between items-center">
       {btnList.map((btn, index) => (
@@ -24,12 +15,13 @@ const BtnGroup = ({ btnList }: BtnGroupProps) => {
           <Button
             key={index + btn.label}
             type="button"
-            color={
-              btn.disable ? 'muted' : btn.active ? 'secondary' : 'primary'
-            }
+            color={btn.disable ? 'muted' : btn.active ? 'secondary' : 'primary'}
             label={btn.label}
             disabled={btn.disable}
-            className="text-sm py-3 px-4 rounded-2xl select-none"
+            className={twMerge(
+              'text-sm py-3 px-4 rounded-2xl select-none',
+              btn.className
+            )}
             rounded="normal"
             onClick={btn.onClick}
           />

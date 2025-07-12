@@ -1,6 +1,6 @@
 'use client'
 
-import { TButtomProps } from '@/domain/type'
+import { TButtomProps } from '@/domain/type/componentsPropsType'
 import { twMerge } from 'tailwind-merge'
 
 const Button = ({

@@ -2,17 +2,31 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react'
 import * as tokenManager from '@/infrastructure/services/tokenManager'
 
-type TAuthState = {
-  token: string | null
+type TUser = {
+  id?: number | null
+  name?: string
+  family?: string
+  full_name?: string
+  user_mobile?: {
+    id?: number | null
+    mobile?: string
+    user_id?: number | null
+  }
 }
 
-type TAuthAction =
-  | { type: 'setToken'; payload: string }
-  | { type: 'clearToken' }
+type TAuthState = {
+  token: string | null
+  user: TUser
+}
 
 const initialState: TAuthState = {
   token: null,
+  user: {},
 }
+
+type TAuthAction =
+  | { type: 'login'; payload: { token: string; user: TUser } }
+  | { type: 'logout' }
 
 const AuthContext = createContext<{
   state: TAuthState
@@ -24,12 +38,18 @@ const AuthContext = createContext<{
 
 const authReducer = (state: TAuthState, action: TAuthAction): TAuthState => {
   switch (action.type) {
-    case 'setToken':
-      tokenManager.setToken(action.payload)
-      return { ...state, token: action.payload }
-    case 'clearToken':
+    case 'login':
+      tokenManager.setToken(action.payload.token)
+      return {
+        token: action.payload.token,
+        user: action.payload.user,
+      }
+    case 'logout':
       tokenManager.setToken(null)
-      return { ...state, token: null }
+      return {
+        token: null,
+        user: {},
+      }
     default:
       return state
   }
